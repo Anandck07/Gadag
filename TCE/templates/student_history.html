@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Student History</h3>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-light">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+                <div class="card-body">
+                    <!-- Student Information -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h4>Student Information</h4>
+                            <table class="table">
+                                <tr>
+                                    <th>Student ID:</th>
+                                    <td>{{ student.student_id }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Name:</th>
+                                    <td>{{ student.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Course:</th>
+                                    <td>{{ student.course }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Current Status</h4>
+                            <table class="table">
+                                <tr>
+                                    <th>Current GPA:</th>
+                                    <td>{{ "%.2f"|format(student.gpa) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Attendance Rate:</th>
+                                    <td>{{ "%.1f"|format(student.attendance_rate * 100) }}%</td>
+                                </tr>
+                                <tr>
+                                    <th>Risk Level:</th>
+                                    <td>
+                                        <span class="badge {% if student.dropout_risk > 0.7 %}bg-danger{% elif student.dropout_risk > 0.4 %}bg-warning{% else %}bg-success{% endif %}">
+                                            {{ "%.0f"|format(student.dropout_risk * 100) }}%
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- History Timeline -->
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>Academic History</h4>
+                            <div class="timeline">
+                                {% for semester in range(1, 4) %}
+                                <div class="timeline-item">
+                                    <div class="timeline-badge bg-primary">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h5 class="timeline-title">Semester {{ semester }}</h5>
+                                            <p class="text-muted">
+                                                <small>
+                                                    <i class="fas fa-calendar"></i>
+                                                    {% if semester == 1 %}
+                                                    Fall 2023
+                                                    {% elif semester == 2 %}
+                                                    Spring 2024
+                                                    {% else %}
+                                                    Fall 2024
+                                                    {% endif %}
+                                                </small>
+                                            </p>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <th>GPA:</th>
+                                                    <td>{{ "%.2f"|format(student.gpa - (0.1 * (3-semester))) }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Attendance:</th>
+                                                    <td>{{ "%.1f"|format((student.attendance_rate - (0.05 * (3-semester))) * 100) }}%</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Study Hours:</th>
+                                                    <td>{{ student.study_hours - (2 * (3-semester)) }} hours/week</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding: 20px 0;
+}
+
+.timeline:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50px;
+    height: 100%;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.timeline-badge {
+    position: absolute;
+    left: 40px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timeline-panel {
+    margin-left: 80px;
+    padding: 20px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.timeline-title {
+    margin: 0;
+    color: #4e73df;
+}
+
+.timeline-body {
+    margin-top: 15px;
+}
+</style>
+{% endblock %} 

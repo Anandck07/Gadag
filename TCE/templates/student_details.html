@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Student Details</h6>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="mb-4">Personal Information</h5>
+                            <table class="table">
+                                <tr>
+                                    <th>Student ID</th>
+                                    <td>{{ student.student_id }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Name</th>
+                                    <td>{{ student.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Age</th>
+                                    <td>{{ student.age }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Gender</th>
+                                    <td>{{ student.gender }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Course</th>
+                                    <td>{{ student.course }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="mb-4">Academic Information</h5>
+                            <table class="table">
+                                <tr>
+                                    <th>GPA</th>
+                                    <td>
+                                        <div class="progress mb-2">
+                                            <div class="progress-bar {% if student.gpa >= 3.0 %}bg-success{% elif student.gpa >= 2.0 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                                 role="progressbar" 
+                                                 style="width: {{ (student.gpa / 4.0 * 100)|round }}%"
+                                                 aria-valuenow="{{ student.gpa }}"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="4.0">
+                                                {{ student.gpa }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Attendance Rate</th>
+                                    <td>
+                                        <div class="progress mb-2">
+                                            <div class="progress-bar {% if student.attendance_rate >= 0.8 %}bg-success{% elif student.attendance_rate >= 0.6 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                                 role="progressbar" 
+                                                 style="width: {{ (student.attendance_rate * 100)|round }}%"
+                                                 aria-valuenow="{{ (student.attendance_rate * 100)|round }}"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100">
+                                                {{ (student.attendance_rate * 100)|round }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Study Hours</th>
+                                    <td>{{ student.study_hours }} hours/week</td>
+                                </tr>
+                                <tr>
+                                    <th>Previous Semester Grades</th>
+                                    <td>{{ student.previous_semester_grades }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h5 class="mb-4">Risk Assessment</h5>
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Risk Score</h6>
+                                            <div class="progress mb-3">
+                                                <div class="progress-bar {% if student.dropout_risk <= 0.4 %}bg-success{% elif student.dropout_risk <= 0.7 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                                     role="progressbar" 
+                                                     style="width: {{ (student.dropout_risk * 100)|round }}%"
+                                                     aria-valuenow="{{ (student.dropout_risk * 100)|round }}"
+                                                     aria-valuemin="0"
+                                                     aria-valuemax="100">
+                                                    {{ (student.dropout_risk * 100)|round }}%
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Risk Factors</h6>
+                                            <ul class="list-unstyled">
+                                                {% for factor in student.risk_factors.split(',') %}
+                                                <li><i class="fas fa-exclamation-circle text-danger me-2"></i>{{ factor.strip() }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if student.notes %}
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h5 class="mb-4">Notes</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="mb-0">{{ student.notes }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h5 class="mb-4">Recent Alerts</h5>
+                            {% if student.alerts %}
+                            <div class="list-group">
+                                {% for alert in student.alerts|sort(attribute='created_at', reverse=true)[:5] %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">
+                                            <span class="badge bg-{{ alert.alert_type }}">
+                                                {{ alert.alert_type|title }}
+                                            </span>
+                                            {{ alert.message }}
+                                        </h6>
+                                        <small class="text-muted">{{ alert.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                No alerts have been sent to this student.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

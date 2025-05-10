@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Add New Student</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="student_id" class="form-label">Student ID</label>
+                                <input type="text" class="form-control" id="student_id" name="student_id" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="age" class="form-label">Age</label>
+                                <input type="number" class="form-control" id="age" name="age" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select class="form-select" id="gender" name="gender" required>
+                                    <option value="">Select gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="gpa" class="form-label">GPA (0-4.0)</label>
+                                <input type="number" class="form-control" id="gpa" name="gpa" step="0.01" min="0" max="4" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="attendance_rate" class="form-label">Attendance Rate (0-1)</label>
+                                <input type="number" class="form-control" id="attendance_rate" name="attendance_rate" step="0.01" min="0" max="1" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="study_hours" class="form-label">Weekly Study Hours</label>
+                                <input type="number" class="form-control" id="study_hours" name="study_hours" step="0.5" min="0" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="previous_semester_grades" class="form-label">Previous Semester Grades</label>
+                                <input type="text" class="form-control" id="previous_semester_grades" name="previous_semester_grades" placeholder="e.g., A,B,C,F" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="family_income" class="form-label">Family Income ($)</label>
+                            <input type="number" class="form-control" id="family_income" name="family_income" min="0" required>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Add Student</button>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script>
+{% endblock %} 

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Bulk Upload Students</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h5><i class="bi bi-info-circle"></i> Instructions</h5>
+                        <p>Upload a CSV file with the following columns:</p>
+                        <ul>
+                            <li>student_id (required)</li>
+                            <li>name (required)</li>
+                            <li>age (required)</li>
+                            <li>gender (required)</li>
+                            <li>gpa (required, 0-4.0)</li>
+                            <li>attendance_rate (required, 0-1)</li>
+                            <li>study_hours (required)</li>
+                            <li>previous_semester_grades (required)</li>
+                            <li>family_income (required)</li>
+                        </ul>
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Select CSV File</label>
+                            <input type="file" class="form-control" id="file" name="file" accept=".csv" required>
+                            <div class="form-text">Only CSV files are accepted</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Upload Students</button>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+                        </div>
+                    </form>
+
+                    <div class="mt-4">
+                        <h5>Sample CSV Format:</h5>
+                        <pre class="bg-light p-3 rounded">
+student_id,name,age,gender,gpa,attendance_rate,study_hours,previous_semester_grades,family_income
+S001,John Doe,20,Male,3.5,0.85,15,A,B,A,45000
+S002,Jane Smith,19,Female,2.8,0.75,12,B,C,B,35000</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Form validation
+(function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script>
+{% endblock %} 
